@@ -17,36 +17,23 @@ import {ILendingPoolAddressesProvider} from '../../interfaces/ILendingPoolAddres
  * @author Aave
  **/
 contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider {
-  string private _marketId;
+
+
   mapping(bytes32 => address) private _addresses;
 
-  bytes32 private constant LENDING_POOL = 'LENDING_POOL';
-  bytes32 private constant LENDING_POOL_CONFIGURATOR = 'LENDING_POOL_CONFIGURATOR';
-  bytes32 private constant POOL_ADMIN = 'POOL_ADMIN';
-  bytes32 private constant EMERGENCY_ADMIN = 'EMERGENCY_ADMIN';
+  bytes32 private constant LENDING_POOL //= 'LENDING_POOL';
+  bytes32 private constant LENDING_POOL_CONFIGURATOR //= 'LENDING_POOL_CONFIGURATOR';
+  bytes32 private constant POOL_ADMIN //= 'POOL_ADMIN';
+  bytes32 private constant EMERGENCY_ADMIN //= 'EMERGENCY_ADMIN';
   bytes32 private constant LENDING_POOL_COLLATERAL_MANAGER = 'COLLATERAL_MANAGER';
   bytes32 private constant PRICE_ORACLE = 'PRICE_ORACLE';
   bytes32 private constant LENDING_RATE_ORACLE = 'LENDING_RATE_ORACLE';
 
-  constructor(string memory marketId) public {
-    _setMarketId(marketId);
+  constructor( bytes32  _LENDING_POOL) public {
+     
+   LENDING_POOL = _LENDINGPOOL;
   }
 
-  /**
-   * @dev Returns the id of the Aave market to which this contracts points to
-   * @return The market id
-   **/
-  function getMarketId() external view override returns (string memory) {
-    return _marketId;
-  }
-
-  /**
-   * @dev Allows to set the market which this LendingPoolAddressesProvider represents
-   * @param marketId The market id
-   */
-  function setMarketId(string memory marketId) external override onlyOwner {
-    _setMarketId(marketId);
-  }
 
   /**
    * @dev General function to update the implementation of a proxy registered with
@@ -57,6 +44,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider 
    * @param id The id
    * @param implementationAddress The address of the new implementation
    */
+
   function setAddressAsProxy(bytes32 id, address implementationAddress)
     external
     override
@@ -76,6 +64,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider 
     _addresses[id] = newAddress;
     emit AddressSet(id, newAddress, false);
   }
+
 
   /**
    * @dev Returns an address by id
@@ -150,7 +139,8 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider 
     return getAddress(POOL_ADMIN);
   }
 
-  function setPoolAdmin(address admin) external override onlyOwner {
+  function setPoolAdmin(bytes32 _poolAdmin, address admin) external override onlyOwner {
+     POOL_ADMIN = _poolAdmin;
     _addresses[POOL_ADMIN] = admin;
     emit ConfigurationAdminUpdated(admin);
   }
@@ -208,8 +198,5 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider 
     }
   }
 
-  function _setMarketId(string memory marketId) internal {
-    _marketId = marketId;
-    emit MarketIdSet(marketId);
-  }
+  f
 }
